@@ -4,321 +4,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz de Benchmarking</title>
+    <title>Quiz de Benchmarking e Comunidades de Prática</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f4f7f6;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        .answer-btn {
-            transition: all 0.3s ease;
-        }
-
-        .answer-btn:hover {
-            transform: scale(1.02);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .correct-answer {
-            background-color: #48bb78 !important;
-            color: white;
-        }
-
-        .wrong-answer {
-            background-color: #f56565 !important;
-            color: white;
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body class="min-h-screen flex items-center justify-center p-4">
+<body>
     <div class="container mx-auto max-w-2xl">
         <div class="bg-white shadow-2xl rounded-2xl overflow-hidden">
             <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white">
-                <h1 class="text-3xl font-bold text-center">Quiz de Benchmarking</h1>
+                <h1 class="text-3xl font-bold text-center">Quiz de Benchmarking e CoP's</h1>
             </div>
 
             <div id="quiz-container" class="p-8">
                 <div id="quiz-content">
                     <div class="flex justify-between mb-4">
                         <div>
-                            <span id="question-counter" class="text-gray-600 font-semibold"></span>
-                            <span id="timer" class="ml-4 text-gray-600 font-semibold"></span>
+                            <span id="contador-questao" class="text-gray-600 font-semibold"></span>
+                            <span id="cronometro" class="ml-4 text-gray-600 font-semibold"></span>
                         </div>
                     </div>
 
-                    <div id="question-container" class="bg-gray-50 p-6 rounded-lg shadow-md mb-6">
-                        <h2 id="question" class="text-xl font-semibold text-gray-800 mb-4"></h2>
-                        <div id="options" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                    <div id="container-questao" class="bg-gray-50 p-6 rounded-lg shadow-md mb-6">
+                        <h2 id="questao" class="text-xl font-semibold text-gray-800 mb-4"></h2>
+                        <div id="opcoes" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
                     </div>
 
                     <div class="flex justify-between">
-                        <button id="prev-btn"
+                        <button id="botao-anterior"
                             class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 hidden">Anterior</button>
-                        <button id="next-btn"
+                        <button id="botao-proximo"
                             class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Próxima</button>
                     </div>
                 </div>
 
-                <div id="result-container" class="hidden text-center">
+                <div id="container-resultado" class="hidden text-center">
                     <h2 class="text-3xl font-bold mb-6">Resultado Final</h2>
                     <div class="bg-gray-100 p-6 rounded-lg">
-                        <p id="final-score" class="text-2xl mb-4"></p>
-                        <p id="performance-feedback" class="text-gray-700 mb-6"></p>
+                        <p id="pontuacao-final" class="text-2xl mb-4"></p>
+                        <p id="feedback-desempenho" class="text-gray-700 mb-6"></p>
                         <div class="space-x-4">
-                            <button id="detailed-results-btn"
+                            <button id="botao-detalhes"
                                 class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
                                 Análise Detalhada
                             </button>
-                            <button id="restart-btn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                            <button id="botao-reiniciar"
+                                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
                                 Refazer Quiz
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <div id="detailed-results" class="hidden mt-6">
+                <div id="detalhes-resultado" class="hidden mt-6">
                     <h3 class="text-2xl font-semibold mb-4">Revisão das Questões</h3>
-                    <div id="question-review" class="space-y-4"></div>
+                    <div id="revisao-questoes" class="space-y-4"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        class BenchmarkingQuiz {
-            constructor() {
-                this.questions = [
-                    {
-                        pergunta: "O que é benchmarking?",
-                        opcoes: ["Uma técnica de marketing", "Um processo de comparação de desempenho", "Uma estratégia de vendas", "Um tipo de auditoria"],
-                        resposta: "Um processo de comparação de desempenho",
-                        explicacao: "Benchmarking é um método sistemático de comparação de processos, desempenho e práticas entre organizações para identificar e aprender melhores estratégias."
-                    },
-                    {
-                        pergunta: "Quais são os tipos principais de benchmarking?",
-                        opcoes: ["Interno, Competitivo, Funcional", "Marketing, Vendas, RH", "Financeiro, Operacional, Estratégico", "Público, Privado, Misto"],
-                        resposta: "Interno, Competitivo, Funcional",
-                        explicacao: "Os três tipos principais de benchmarking são: interno (dentro da própria organização), competitivo (com concorrentes diretos) e funcional (com empresas de diferentes setores)."
-                    },
-                    {
-                        pergunta: "Qual o principal objetivo do benchmarking?",
-                        opcoes: ["Eliminar concorrentes", "Melhorar processos e práticas", "Reduzir custos a qualquer preço", "Aumentar a publicidade"],
-                        resposta: "Melhorar processos e práticas",
-                        explicacao: "O objetivo central do benchmarking é identificar, compreender e adaptar as melhores práticas para aprimorar continuamente os processos organizacionais."
-                    },
-                    {
-                        pergunta: "Como o benchmarking contribui para a inovação?",
-                        opcoes: ["Copiando exatamente", "Identificando e adaptando melhores práticas", "Eliminando concorrentes", "Reduzindo investimentos"],
-                        resposta: "Identificando e adaptando melhores práticas",
-                        explicacao: "A inovação via benchmarking ocorre ao estudar, compreender e adaptar criativamente as estratégias bem-sucedidas de outras organizações."
-                    },
-                    {
-                        pergunta: "Qual desafio ético é crucial no benchmarking?",
-                        opcoes: ["Custo da pesquisa", "Complexidade técnica", "Confidencialidade e integridade", "Tempo de implementação"],
-                        resposta: "Confidencialidade e integridade",
-                        explicacao: "A ética no benchmarking envolve respeitar a confidencialidade dos dados, manter a integridade profissional e evitar práticas que possam ser consideradas espionagem industrial."
-                    }
-                ];
+    <footer class="bg-gradient-to-r from-gray-200 to-gray-300 text-center py-6 mt-8 border-t shadow-md">
+        <p class="text-gray-800 text-sm font-medium">
+            Trabalho desenvolvido por <strong class="text-blue-600">Luan Borges</strong>,
+            <strong class="text-blue-600">Lucas Paschoal</strong> e
+            <strong class="text-blue-600">Samuel Pena</strong>.
+        </p>
+        <p class="text-gray-800 text-sm font-medium">
+            Turma de <strong class="text-purple-600">Sistemas de Informação - 6º período</strong>.
+        </p>
+        <p class="text-gray-800 text-sm font-medium">
+            Disciplina de <strong style="color: #f97316;">Gestão do Conhecimento</strong>.
+        </p>
+        <p class="text-gray-800 text-sm font-medium">
+            Este quiz foi criado para dinamizar e fixar conhecimentos de uma apresentação sobre
+            <strong class="text-green-600">Benchmarking</strong> e
+            <strong class="text-green-600">Comunidades de Prática</strong>.
+        </p>
+    </footer>
 
-                this.currentQuestionIndex = 0;
-                this.score = 0;
-                this.timer = 0;
-                this.timerInterval = null;
-                this.selectedAnswers = [];
-
-                this.initializeElements();
-                this.bindEvents();
-                this.startQuiz();
-            }
-
-            initializeElements() {
-                this.quizContent = document.getElementById('quiz-content');
-                this.questionEl = document.getElementById('question');
-                this.optionsEl = document.getElementById('options');
-                this.questionCounter = document.getElementById('question-counter');
-                this.timerEl = document.getElementById('timer');
-                this.nextBtn = document.getElementById('next-btn');
-                this.prevBtn = document.getElementById('prev-btn');
-                this.resultContainer = document.getElementById('result-container');
-                this.finalScoreEl = document.getElementById('final-score');
-                this.performanceFeedbackEl = document.getElementById('performance-feedback');
-                this.detailedResultsBtn = document.getElementById('detailed-results-btn');
-                this.restartBtn = document.getElementById('restart-btn');
-                this.detailedResultsContainer = document.getElementById('detailed-results');
-                this.questionReviewContainer = document.getElementById('question-review');
-            }
-
-            bindEvents() {
-                this.nextBtn.addEventListener('click', () => this.moveToNextQuestion());
-                this.prevBtn.addEventListener('click', () => this.moveToPreviousQuestion());
-                this.restartBtn.addEventListener('click', () => this.restartQuiz());
-                this.detailedResultsBtn.addEventListener('click', () => this.showDetailedResults());
-            }
-
-            startQuiz() {
-                this.startTimer();
-                this.loadQuestion();
-            }
-
-            startTimer() {
-                this.timerInterval = setInterval(() => {
-                    this.timer++;
-                    const minutes = Math.floor(this.timer / 60).toString().padStart(2, '0');
-                    const seconds = (this.timer % 60).toString().padStart(2, '0');
-                    this.timerEl.textContent = `Tempo: ${minutes}:${seconds}`;
-                }, 1000);
-            }
-
-            loadQuestion() {
-                const currentQuestion = this.questions[this.currentQuestionIndex];
-                this.questionEl.textContent = currentQuestion.pergunta;
-                this.questionCounter.textContent = `Questão ${this.currentQuestionIndex + 1} de ${this.questions.length}`;
-
-                this.optionsEl.innerHTML = '';
-                currentQuestion.opcoes.forEach(opcao => {
-                    const button = document.createElement('button');
-                    button.textContent = opcao;
-                    button.classList.add('answer-btn', 'w-full', 'p-3', 'text-left', 'bg-white', 'border', 'rounded', 'hover:bg-blue-50');
-                    button.addEventListener('click', () => this.selectAnswer(button, opcao));
-                    this.optionsEl.appendChild(button);
-                });
-
-                this.updateNavigationButtons();
-            }
-
-            selectAnswer(button, selectedOption) {
-                const currentQuestion = this.questions[this.currentQuestionIndex];
-                const buttons = this.optionsEl.querySelectorAll('button');
-
-                buttons.forEach(btn => {
-                    btn.disabled = true;
-                    btn.classList.remove('hover:bg-blue-50');
-                });
-
-                if (selectedOption === currentQuestion.resposta) {
-                    button.classList.add('correct-answer');
-                    this.score++;
-                } else {
-                    button.classList.add('wrong-answer');
-                    const correctButton = Array.from(buttons).find(btn =>
-                        btn.textContent === currentQuestion.resposta
-                    );
-                    correctButton.classList.add('correct-answer');
-                }
-
-                this.selectedAnswers[this.currentQuestionIndex] = {
-                    selected: selectedOption,
-                    correct: currentQuestion.resposta
-                };
-            }
-
-            moveToNextQuestion() {
-                if (this.currentQuestionIndex < this.questions.length - 1) {
-                    this.currentQuestionIndex++;
-                    this.loadQuestion();
-                } else {
-                    this.endQuiz();
-                }
-            }
-
-            moveToPreviousQuestion() {
-                if (this.currentQuestionIndex > 0) {
-                    this.currentQuestionIndex--;
-                    this.loadQuestion();
-                }
-            }
-
-            updateNavigationButtons() {
-                this.prevBtn.classList.toggle('hidden', this.currentQuestionIndex === 0);
-                this.nextBtn.textContent = this.currentQuestionIndex === this.questions.length - 1
-                    ? 'Finalizar' : 'Próxima';
-            }
-
-            endQuiz() {
-                clearInterval(this.timerInterval);
-                this.quizContent.classList.add('hidden');
-                this.resultContainer.classList.remove('hidden');
-
-                const percentage = (this.score / this.questions.length) * 100;
-                this.finalScoreEl.textContent = `Você acertou ${this.score} de ${this.questions.length} perguntas (${percentage.toFixed(1)}%)`;
-
-                this.provideFeedback(percentage);
-            }
-
-            provideFeedback(percentage) {
-                let feedback = '';
-                if (percentage < 40) {
-                    feedback = 'Há muito espaço para aprender sobre benchmarking. Continue estudando!';
-                } else if (percentage < 70) {
-                    feedback = 'Bom desempenho! Você demonstra conhecimento básico sobre benchmarking.';
-                } else {
-                    feedback = 'Excelente! Você tem um conhecimento sólido sobre benchmarking.';
-                }
-                this.performanceFeedbackEl.textContent = feedback;
-            }
-
-            showDetailedResults() {
-                this.questionReviewContainer.innerHTML = '';
-                this.selectedAnswers.forEach((answer, index) => {
-                    const question = this.questions[index];
-                    const reviewDiv = document.createElement('div');
-                    reviewDiv.classList.add('bg-white', 'p-4', 'rounded', 'shadow', 'mb-4');
-
-                    reviewDiv.innerHTML = `
-                <h4 class="font-semibold mb-2">${question.pergunta}</h4>
-                <p class="mb-2">Sua resposta: <span class="${answer.selected === answer.correct ? 'text-green-600' : 'text-red-600'}">${answer.selected}</span></p>
-                <p class="text-gray-600">Resposta correta: ${answer.correct}</p>
-                <p class="mt-2 text-sm text-gray-700"><strong>Explicação:</strong> ${question.explicacao}</p>
-            `;
-
-                    this.questionReviewContainer.appendChild(reviewDiv);
-                });
-
-                const backButton = document.createElement('button');
-                backButton.textContent = 'Voltar para Resultados';
-                backButton.classList.add('bg-blue-500', 'text-white', 'px-4', 'py-2', 'rounded', 'hover:bg-blue-600', 'mt-4');
-                backButton.addEventListener('click', () => {
-                    this.detailedResultsContainer.classList.add('hidden');
-                    this.resultContainer.classList.remove('hidden');
-                });
-                this.questionReviewContainer.appendChild(backButton);
-
-                this.resultContainer.classList.add('hidden');
-                this.detailedResultsContainer.classList.remove('hidden');
-            }
-
-            restartQuiz() {
-                this.currentQuestionIndex = 0;
-                this.score = 0;
-                this.timer = 0;
-                this.selectedAnswers = [];
-
-                clearInterval(this.timerInterval);
-
-                this.resultContainer.classList.add('hidden');
-                this.detailedResultsContainer.classList.add('hidden');
-                this.quizContent.classList.remove('hidden');
-
-                this.startQuiz();
-            }
-        }
-        
-        new BenchmarkingQuiz();
-    </script>
+    <script src="js/script.js"></script>
 </body>
 
 </html>

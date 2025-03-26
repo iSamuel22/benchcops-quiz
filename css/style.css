@@ -1,0 +1,44 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f7f6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+footer {
+    background: linear-gradient(to right, #e2e8f0, #cbd5e1);
+    text-align: center;
+    padding: 1.5rem;
+    margin-top: auto;
+    border-top: 1px solid #e5e7eb;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.botao-resposta {
+    transition: all 0.3s ease;
+}
+
+.botao-resposta:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.resposta-correta {
+    background-color: #48bb78 !important;
+    color: white;
+}
+
+.resposta-errada {
+    background-color: #f56565 !important;
+    color: white;
+}
